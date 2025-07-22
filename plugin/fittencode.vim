@@ -6,6 +6,7 @@ if exists("g:loaded_fittencode")
   endif
 let g:loaded_fittencode = 1
 let g:accept_just_now = 0
+let g:fitten_accepted = v:false
 
 let s:hlgroup = 'FittenSuggestion'
 function! SetSuggestionStyle() abort
@@ -193,12 +194,12 @@ endfunction
 
 function! FittenAcceptMain()
     echo "Accept"
-    let default = pumvisible() ? "\<C-N>" : "\t"
 
     if mode() !~# '^[iR]' || !exists('b:fitten_suggestion')
-        return g:fitten_accept_key == "\t" ? default : g:fitten_accept_key
+        return ''
     endif
 
+    let g:fitten_accepted = v:true
     let l:text = b:fitten_suggestion
 
     call ClearCompletion()
@@ -224,16 +225,21 @@ endfunction
 
 function FittenAccept()
     let g:accept_just_now = 2
-    let l:accept = FittenAcceptMain()
-    let l:accept_lines = split(l:accept, "\n", v:true)
+    let g:fitten_accepted = v:false
 
+    let l:accept = FittenAcceptMain()
+    if g:fitten_accepted == v:false
+        let l:feed = g:fitten_accept_key == '\t' ? "\<Tab>" : g:fitten_accept_key
+        call feedkeys(l:feed, 'n')
+        return
+    endif
+
+    let l:accept_lines = split(l:accept, "\n", v:true)
     let l:is_first_line = v:true
     for line in l:accept_lines
         call FittenInsert(line, l:is_first_line)
         let l:is_first_line = v:false
     endfor
-
-    return ""
 endfunction
 
 function! FittenAcceptable()
