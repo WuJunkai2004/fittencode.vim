@@ -6,7 +6,6 @@ if exists("g:loaded_fittencode")
   endif
 let g:loaded_fittencode = 1
 let g:accept_just_now = 0
-let g:fitten_accepted = v:false
 
 let s:hlgroup = 'FittenSuggestion'
 function! SetSuggestionStyle() abort
@@ -199,7 +198,6 @@ function! FittenAcceptMain()
         return ''
     endif
 
-    let g:fitten_accepted = v:true
     let l:text = b:fitten_suggestion
 
     call ClearCompletion()
@@ -225,11 +223,11 @@ endfunction
 
 function FittenAccept()
     let g:accept_just_now = 2
-    let g:fitten_accepted = v:false
 
     let l:accept = FittenAcceptMain()
-    if g:fitten_accepted == v:false
-        let l:feed = g:fitten_accept_key == '\t' ? "\<Tab>" : g:fitten_accept_key
+    if empty(l:accept)
+        let l:feed = pumvisible() ? "\<C-N>" : "\<Tab>"
+        let l:feed = g:fitten_accept_key == '\t' ? l:feed : g:fitten_accept_key
         call feedkeys(l:feed, 'n')
         return
     endif
