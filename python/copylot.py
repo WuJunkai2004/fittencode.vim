@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+from typing import Optional
 
 from agent import Agent
 from config import Config
@@ -9,7 +10,7 @@ from provider import ProviderBuild
 
 
 class CopylotDaemon:
-    def __init__(self, config_path: str | None = None):
+    def __init__(self, config_path: Optional[str] = None):
         # Determine config path: Priority 1. Constructor 2. Default ~/.vim/ai_config.toml
         if (
             not config_path
@@ -170,7 +171,7 @@ class CopylotDaemon:
             self.response("error", f"Unknown action: {action}")
             self.response("ends", "")
 
-    def read(self) -> tuple[dict | None, str]:
+    def read(self) -> tuple[Optional[dict], str]:
         """Reads a message from stdin and returns the parsed JSON and error string."""
         try:
             while True:

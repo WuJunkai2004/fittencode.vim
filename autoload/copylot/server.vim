@@ -128,6 +128,9 @@ endfunction
 
 
 function! s:on_exit(channel, exit_code) abort
+    if a:exit_code != 0
+        echomsg "Copylot Server Exit Faultly"
+    endif
     let s:job = v:null
     let s:response_buffer = ''
 endfunction

@@ -1,5 +1,6 @@
 import json
 import subprocess
+from typing import Optional
 
 
 class Pipe:
@@ -95,7 +96,7 @@ class MCPManager:
         self.servers: dict[str, MCPServer] = {}
         self.schema_cache: list[dict] = []
 
-    def add_server(self, name: str, command: str, args: list[str] | None = None):
+    def add_server(self, name: str, command: str, args: Optional[list[str]] = None):
         """Register and start an MCP server."""
         try:
             self.servers[name] = MCPServer(name, command, args or [])
